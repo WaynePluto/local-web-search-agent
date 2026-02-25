@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "web-search": {
+      "command": "node",
+      "args": ["D:/Documents/ai-dev/web-search-agent/build/index.js"]
+    }
+  }
+}

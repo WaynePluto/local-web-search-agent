@@ -1,0 +1,36 @@
+{
+  "name": "web-search-agent",
+  "version": "1.0.0",
+  "description": "MCP Server for web search with Bing",
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "node build/index.js",
+    "dev": "tsx src/index.ts",
+    "postbuild": "echo Build complete - MCP Server ready at build/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "web-search",
+    "bing"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "dompurify": "^3.3.1",
+    "jsdom": "^28.1.0",
+    "playwright": "^1.58.2",
+    "turndown": "^7.2.2"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^3.0.5",
+    "@types/jsdom": "^28.0.0",
+    "@types/node": "^25.3.0",
+    "@types/turndown": "^5.0.5",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
