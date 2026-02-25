@@ -8,7 +8,10 @@
       "Bash(npm run:*)",
       "Bash(echo:*)",
       "mcp__web-search__web_search_bing",
-      "WebSearch"
+      "WebSearch",
+      "mcp__web-search__read_webpage",
+      "Bash(cat:*)",
+      "Bash(ls:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

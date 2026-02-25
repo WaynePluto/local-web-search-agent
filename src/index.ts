@@ -8,6 +8,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import { webSearchBing } from "./tools/webSearchBing.js";
 import { readWebpage } from "./tools/readWebpage.js";
+import { getCurrentTime } from "./tools/currentTime.js";
 
 // 创建 MCP Server
 const server = new Server(
@@ -66,6 +67,15 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["url"],
         },
       },
+      {
+        name: "get_current_time",
+        description:
+          "获取当前时间信息，包括当前年份、去年年份、前年年份等。用于搜索最新动态时动态获取年份信息。",
+        inputSchema: {
+          type: "object",
+          properties: {},
+        },
+      },
     ],
   };
 });
@@ -104,6 +114,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         }
 
         const result = await readWebpage(url);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      }
+
+      case "get_current_time": {
+        const result = getCurrentTime();
         return {
           content: [
             {

@@ -50,6 +50,7 @@
    配置完成后，你可以在 Claude Code 中直接调用以下工具：
    - `web_search_bing`: 执行网络搜索
    - `read_webpage`: 读取网页内容
+   - `get_current_time`: 获取当前时间信息
 
 ### 方式二：作为子代理使用（推荐）
 
@@ -91,6 +92,52 @@
 - **网页内容提取**: 自动清洗网页内容，返回干净的 Markdown 格式
 - **智能子代理**: 自动完成"搜索-阅读-总结"闭环
 - **结果缓存**: 避免重复抓取同一页面
+- **智能搜索技能**: 结构化搜索流程，提供多源验证的可靠结果
+
+## 智能搜索技能 (Smart Search)
+
+本项目提供了一个名为 `smart-search` 的技能，适用于需要高可靠性和结构化结果的搜索场景。
+
+### 技能特点
+
+- **多源验证**: 自动从多个官方渠道交叉验证信息
+- **结构化输出**: 提供核心答案、来源链接和可信度评估
+- **智能搜索策略**: 根据搜索类型自动优化关键词
+- **时效性检查**: 自动验证信息的发布时间
+
+### 使用方法
+
+1. **复制技能模板**
+
+   将 `src/skills/smart-search/SKILL.md` 复制到全局 skills 目录：
+   ```bash
+   mkdir -p ~/.claude/skills/smart-search
+   cp src/skills/smart-search/SKILL.md ~/.claude/skills/smart-search/
+   ```
+
+   **注意**: Skill 的正确目录结构为 `~/.claude/skills/<skill-name>/SKILL.md`
+
+2. **在 Claude Code 中使用**
+
+   当需要进行可靠的信息搜索时：
+   - 直接提问，让 Claude 自动判断
+   - 或使用 `/smart-search` 命令明确指定
+
+### 适用场景
+
+| 场景 | 示例 |
+|------|------|
+| 查询软件版本 | "LayaAir 最新版本是多少？" |
+| 查找技术文档 | "React 19 的新特性有哪些？" |
+| 问题解决方案 | "Python pip 安装错误怎么解决？" |
+| 最新动态 | "Claude 4 发布时间" |
+
+### 输出格式
+
+智能搜索技能会返回结构化的结果，包括：
+- **核心信息**: 直接回答你的问题
+- **信息来源**: 多个可信来源的链接和关键信息
+- **可信度评估**: 官方渠道确认、多源验证、时效性说明
 
 ## 工具说明
 
@@ -126,6 +173,25 @@
 {
   "title": "网页标题",
   "markdown_content": "# 清洗后的 Markdown 内容"
+}
+```
+
+### get_current_time
+
+获取当前时间信息，包括当前年份、去年年份、前年年份等。用于搜索最新动态时动态获取年份信息。
+
+**参数**: 无
+
+**返回**:
+```json
+{
+  "currentDateTime": "2026/2/26 10:30:00",
+  "currentYear": 2026,
+  "currentMonth": 2,
+  "currentDay": 26,
+  "lastYear": 2025,
+  "yearBeforeLast": 2024,
+  "isoDate": "2026-02-26T02:30:00.000Z"
 }
 ```
 
@@ -165,9 +231,13 @@ web-search-agent/
 │   ├── index.ts           # MCP Server 入口
 │   ├── agents/
 │   │   └── web-search-agent.md  # 子代理模板
+│   ├── skills/
+│   │   └── smart-search/
+│   │       └── SKILL.md         # 智能搜索技能
 │   └── tools/
 │       ├── webSearchBing.ts     # Bing 搜索工具
 │       ├── readWebpage.ts       # 网页读取工具
+│       ├── currentTime.ts       # 当前时间工具
 │       └── cache.ts             # 缓存工具
 ├── build/                  # 编译输出目录
 ├── package.json
