@@ -1,8 +1,10 @@
 {
   "mcpServers": {
-    "web-search": {
+    "local-web-search": {
       "command": "node",
-      "args": ["D:/Documents/ai-dev/web-search-agent/build/index.js"]
+      "args": [
+        "D:/Documents/ai-dev/web-search-agent/build/index.js"
+      ]
     }
   }
 }

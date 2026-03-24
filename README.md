@@ -25,6 +25,7 @@
 这种方式适用于你想在自己的项目中直接使用搜索工具。
 
 1. **安装依赖**
+
    ```bash
    cd /path/to/web-search-agent
    npm install
@@ -34,10 +35,11 @@
 2. **配置 MCP Server**
 
    在你的项目目录下创建或编辑 `.claude/settings.json`：
+
    ```json
    {
      "mcpServers": {
-       "web-search": {
+       "local-web-search": {
          "command": "node",
          "args": ["/absolute/path/to/web-search-agent/build/index.js"]
        }
@@ -59,6 +61,7 @@
 1. **复制子代理模板**
 
    将 `src/agents/web-search-agent.md` 复制到全局 agents 目录：
+
    ```bash
    mkdir -p ~/.claude/agents
    cp src/agents/web-search-agent.md ~/.claude/agents/
@@ -67,6 +70,7 @@
 2. **在你的项目中配置 MCP Server**
 
    在你的项目目录下创建或编辑 `.claude/settings.json`：
+
    ```json
    {
      "mcpServers": {
@@ -110,6 +114,7 @@
 1. **复制技能模板**
 
    将 `src/skills/smart-search/SKILL.md` 复制到全局 skills 目录：
+
    ```bash
    mkdir -p ~/.claude/skills/smart-search
    cp src/skills/smart-search/SKILL.md ~/.claude/skills/smart-search/
@@ -125,16 +130,17 @@
 
 ### 适用场景
 
-| 场景 | 示例 |
-|------|------|
-| 查询软件版本 | "LayaAir 最新版本是多少？" |
-| 查找技术文档 | "React 19 的新特性有哪些？" |
+| 场景         | 示例                            |
+| ------------ | ------------------------------- |
+| 查询软件版本 | "LayaAir 最新版本是多少？"      |
+| 查找技术文档 | "React 19 的新特性有哪些？"     |
 | 问题解决方案 | "Python pip 安装错误怎么解决？" |
-| 最新动态 | "Claude 4 发布时间" |
+| 最新动态     | "Claude 4 发布时间"             |
 
 ### 输出格式
 
 智能搜索技能会返回结构化的结果，包括：
+
 - **核心信息**: 直接回答你的问题
 - **信息来源**: 多个可信来源的链接和关键信息
 - **可信度评估**: 官方渠道确认、多源验证、时效性说明
@@ -146,11 +152,13 @@
 使用 Bing 搜索引擎执行网络搜索。
 
 **参数**:
+
 - `query` (string, 必需): 搜索关键词
 - `num` (number, 可选): 返回结果数量，默认 10，最大 50
 - `useInternational` (boolean, 可选): 是否使用 Bing 国际版，默认 false
 
 **返回**:
+
 ```json
 [
   {
@@ -166,9 +174,11 @@
 访问指定 URL，提取并清洗页面正文内容。
 
 **参数**:
+
 - `url` (string, 必需): 要读取的网页 URL
 
 **返回**:
+
 ```json
 {
   "title": "网页标题",
@@ -183,6 +193,7 @@
 **参数**: 无
 
 **返回**:
+
 ```json
 {
   "currentDateTime": "2026/2/26 10:30:00",
@@ -209,6 +220,7 @@ Web Search Agent 子代理会自动执行以下步骤：
 ## 使用示例
 
 ### 示例 1：查询实时信息
+
 ```
 你：Python 最新版本是多少？
 → [主代理自动调用 web-search-agent]
@@ -217,6 +229,7 @@ Web Search Agent 子代理会自动执行以下步骤：
 ```
 
 ### 示例 2：复杂查询
+
 ```
 你：对比一下最近的两款热门轻薄本，给出选购建议。
 → [子代理进行多轮搜索和阅读]
@@ -263,16 +276,19 @@ npm run watch
 ## 性能优化
 
 ### 缓存机制
+
 - **搜索结果缓存**：5 分钟，避免重复搜索
 - **网页内容缓存**：10 分钟，避免重复抓取
 - **自动清理**：每分钟自动清理过期缓存
 
 ### 超时控制
+
 - **搜索超时**：15 秒，防止搜索卡死
 - **页面加载超时**：20 秒，防止页面加载过慢
 - **页面评估超时**：5 秒，防止内容提取卡死
 
 ### 子代理限制
+
 - 最多搜索 10 次
 - 最多阅读 30 个页面
 - 避免陷入死循环
