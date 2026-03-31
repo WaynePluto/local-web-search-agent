@@ -7,6 +7,7 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { webSearchBing } from "./tools/webSearchBing.js";
+import { webSearchTavily } from "./tools/webSearchTavily.js";
 import { readWebpage } from "./tools/readWebpage.js";
 import { getCurrentTime } from "./tools/currentTime.js";
 
@@ -47,6 +48,26 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: "boolean",
               description: "是否使用 Bing 国际版（默认 false，使用中文版）",
               default: false,
+            },
+          },
+          required: ["query"],
+        },
+      },
+      {
+        name: "web_search_tavily",
+        description:
+          "使用 Tavily 搜索引擎执行网络搜索。输入：query（搜索关键词）和 num（返回结果数量，默认10）。返回：包含标题、URL和摘要的搜索结果列表。相比 Bing 搜索更快速稳定，无需浏览器环境。",
+        inputSchema: {
+          type: "object",
+          properties: {
+            query: {
+              type: "string",
+              description: "搜索关键词",
+            },
+            num: {
+              type: "number",
+              description: "返回结果数量（默认10，最大20）",
+              default: 10,
             },
           },
           required: ["query"],
@@ -96,6 +117,25 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         }
 
         const results = await webSearchBing(query, num, useInternational);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(results, null, 2),
+            },
+          ],
+        };
+      }
+
+      case "web_search_tavily": {
+        const query = args?.query as string;
+        const num = (args?.num as number) ?? 10;
+
+        if (!query) {
+          throw new Error("缺少必需参数：query");
+        }
+
+        const results = await webSearchTavily(query, num);
         return {
           content: [
             {
