@@ -1,4 +1,6 @@
-# Web Search Agent
+[中文](./README.md) | [English](./README.en.md)
+
+# Local Web Search Agent
 
 为 Claude Code 提供网络搜索能力的 MCP Server 和子代理模板。
 
@@ -9,7 +11,7 @@
 ### 架构概览
 
 ```
-用户 → Claude Code 主代理 → Web Search Agent 子代理 → MCP Server → Bing 搜索
+用户 → Claude Code 主代理 → local-web-search-agent 子代理 → MCP Server → Bing 搜索
                                                                   ↓
                                               Chrome for Testing (页面渲染)
 ```
@@ -74,7 +76,7 @@
    ```json
    {
      "mcpServers": {
-       "web-search": {
+       "local-web-search": {
          "command": "node",
          "args": ["/absolute/path/to/local-web-search-agent/build/index.js"]
        }
@@ -208,7 +210,7 @@
 
 ## 子代理工作流程
 
-Web Search Agent 子代理会自动执行以下步骤：
+local-web-search-agent 子代理会自动执行以下步骤：
 
 1. 分析用户问题，提取核心关键词
 2. 使用 `web_search_bing` 进行搜索
@@ -304,6 +306,14 @@ npm run watch
 - **DOMPurify**: HTML 清洗
 - **Turndown**: HTML 转 Markdown
 - **TypeScript**: 类型安全
+
+## 社区扩展 / Forks
+
+本项目主线仅提供本地 Playwright + Bing 搜索路径，强调“本地浏览器 + 人工点击，避免登录外部账号”。  
+如果你需要基于远程 API 的搜索方案（例如 Tavily），可以使用下面的社区 Fork：
+
+- [Tavily-FDE/autopr--fork-web-search-agent](https://github.com/Tavily-FDE/autopr--fork-web-search-agent)  
+  在本地 Bing 搜索基础上新增 `web_search_tavily` 工具，使用 Tavily API 进行搜索，需要配置 `TAVILY_API_KEY` 环境变量。适合需要更快速、稳定的 API 搜索且愿意注册 Tavily 账号的用户。
 
 ## 许可证
 

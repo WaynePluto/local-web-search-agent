@@ -7,15 +7,15 @@
       "Bash(npx tsc:*)",
       "Bash(npm run:*)",
       "Bash(echo:*)",
-      "mcp__web-search__web_search_bing",
+      "mcp__local-web-search__web_search_bing",
       "WebSearch",
-      "mcp__web-search__read_webpage",
+      "mcp__local-web-search__read_webpage",
       "Bash(cat:*)",
       "Bash(ls:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
-    "web-search"
+    "local-web-search"
   ]
 }

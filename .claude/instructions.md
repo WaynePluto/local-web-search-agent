@@ -1,10 +1,10 @@
-# Web Search Agent - 网络搜索指令
+# Local Web Search Agent - 网络搜索指令
 
 ## 网络搜索能力
 
 本项目已配置以下搜索能力：
 
-1. **MCP 工具**（推荐用于简单查询）：`mcp__web-search__web_search_bing`、`WebSearch`
+1. **MCP 工具**（推荐用于简单查询）：`mcp__local-web-search__web_search_bing`、`WebSearch`
 2. **`local-web-search-agent` 子代理**（用于复杂研究任务）
 
 ## 使用策略
@@ -20,7 +20,7 @@
 ✅ 最新版本号、发布日期等
 
 示例：
-→ mcp__web-search__web_search_bing(query="郑州天气 明天")
+→ mcp__local-web-search__web_search_bing(query="郑州天气 明天")
 → WebSearch(query="Python 最新版本")
 ```
 
