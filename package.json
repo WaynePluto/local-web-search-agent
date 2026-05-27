@@ -1,5 +1,5 @@
 {
-  "name": "web-search-agent",
+  "name": "local-web-search-agent",
   "version": "1.0.0",
   "description": "MCP Server for web search with Bing",
   "main": "build/index.js",

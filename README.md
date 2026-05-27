@@ -27,7 +27,7 @@
 1. **安装依赖**
 
    ```bash
-   cd /path/to/web-search-agent
+   cd /path/to/local-web-search-agent
    npm install
    npm run build
    ```
@@ -41,7 +41,7 @@
      "mcpServers": {
        "local-web-search": {
          "command": "node",
-         "args": ["/absolute/path/to/web-search-agent/build/index.js"]
+         "args": ["/absolute/path/to/local-web-search-agent/build/index.js"]
        }
      }
    }
@@ -60,11 +60,11 @@
 
 1. **复制子代理模板**
 
-   将 `src/agents/web-search-agent.md` 复制到全局 agents 目录：
+   将 `src/agents/local-web-search-agent.md` 复制到全局 agents 目录：
 
    ```bash
    mkdir -p ~/.claude/agents
-   cp src/agents/web-search-agent.md ~/.claude/agents/
+   cp src/agents/local-web-search-agent.md ~/.claude/agents/
    ```
 
 2. **在你的项目中配置 MCP Server**
@@ -76,7 +76,7 @@
      "mcpServers": {
        "web-search": {
          "command": "node",
-         "args": ["/absolute/path/to/web-search-agent/build/index.js"]
+         "args": ["/absolute/path/to/local-web-search-agent/build/index.js"]
        }
      }
    }
@@ -86,7 +86,7 @@
 
    在 Claude Code 中，当需要网络搜索时：
    - 直接提问，让主代理自动判断并调用子代理
-   - 或使用 `/agent web-search-agent` 命令明确指定
+   - 或使用 `/agent local-web-search-agent` 命令明确指定
 
 ---
 
@@ -223,7 +223,7 @@ Web Search Agent 子代理会自动执行以下步骤：
 
 ```
 你：Python 最新版本是多少？
-→ [主代理自动调用 web-search-agent]
+→ [主代理自动调用 local-web-search-agent]
 → Python 的最新稳定版本是 3.13.0，发布于 2024 年 10 月。
    来源：https://www.python.org/downloads/
 ```
@@ -239,11 +239,11 @@ Web Search Agent 子代理会自动执行以下步骤：
 ## 项目结构
 
 ```
-web-search-agent/
+local-web-search-agent/
 ├── src/
 │   ├── index.ts           # MCP Server 入口
 │   ├── agents/
-│   │   └── web-search-agent.md  # 子代理模板
+│   │   └── local-web-search-agent.md  # 子代理模板
 │   ├── skills/
 │   │   └── smart-search/
 │   │       └── SKILL.md         # 智能搜索技能

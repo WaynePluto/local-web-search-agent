@@ -2,10 +2,7 @@
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { webSearchBing } from "./tools/webSearchBing.js";
 import { readWebpage } from "./tools/readWebpage.js";
 import { getCurrentTime } from "./tools/currentTime.js";
@@ -13,14 +10,14 @@ import { getCurrentTime } from "./tools/currentTime.js";
 // 创建 MCP Server
 const server = new Server(
   {
-    name: "web-search-agent",
+    name: "local-web-search-agent",
     version: "1.0.0",
   },
   {
     capabilities: {
       tools: {},
     },
-  }
+  },
 );
 
 // 注册工具列表处理器
@@ -69,8 +66,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "get_current_time",
-        description:
-          "获取当前时间信息，包括当前年份、去年年份、前年年份等。用于搜索最新动态时动态获取年份信息。",
+        description: "获取当前时间信息，包括当前年份、去年年份、前年年份等。用于搜索最新动态时动态获取年份信息。",
         inputSchema: {
           type: "object",
           properties: {},
@@ -81,7 +77,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 });
 
 // 注册工具调用处理器
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
 
   try {
@@ -160,7 +156,7 @@ async function main() {
   console.error("Web Search MCP Server running on stdio");
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error("Server error:", error);
   process.exit(1);
 });

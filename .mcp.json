@@ -3,7 +3,7 @@
     "local-web-search": {
       "command": "node",
       "args": [
-        "D:/Documents/ai-dev/web-search-agent/build/index.js"
+        "D:/Documents/ai-dev/local-web-search-agent/build/index.js"
       ]
     }
   }
