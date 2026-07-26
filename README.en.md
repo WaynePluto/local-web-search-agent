@@ -2,28 +2,44 @@
 
 # Local Web Search Agent
 
-An MCP Server and subagent template that gives Claude Code web search capabilities.
+An MCP Server that gives Claude Code and OpenCode web search capabilities, with a Claude Code subagent template included.
 
 ## Overview
 
-This project provides web search support for Claude Code through MCP (Model Context Protocol). When Claude Code needs real-time information or content from the web, it can search and return concise, grounded answers through this project.
+This project provides web search support for Claude Code and OpenCode through MCP (Model Context Protocol). When an AI coding agent needs real-time information or web content, it can search and return concise, grounded answers through this project.
 
 ### Architecture
 
 ```
-User -> Claude Code main agent -> local-web-search-agent subagent -> MCP Server -> Bing Search
-                                                                                 |
-                                                                                 v
-                                                                  Chrome for Testing (page rendering)
+User -> Claude Code (optional subagent) / OpenCode -> MCP Server -> Bing Search
+                                                        |
+                                                        v
+                                         Chrome for Testing (page rendering)
+```
+
+## Runtime Configuration
+
+This project uses Chrome for Testing to perform searches and render web pages. The default executable path is `D:/app/chrome-win64/chrome.exe`. If Chrome is installed elsewhere, set `CHROME_PATH` before starting the MCP server:
+
+```powershell
+# Windows PowerShell (set a persistent user environment variable)
+[Environment]::SetEnvironmentVariable("CHROME_PATH", "C:\path\to\chrome.exe", "User")
+```
+
+Restart your terminal and Claude Code or OpenCode after setting the variable so they can read the new value.
+
+```bash
+# macOS / Linux
+export CHROME_PATH="/path/to/chrome"
 ```
 
 ---
 
-## Add Web Search To Other Projects
+## Use With Claude Code Or OpenCode
 
-There are two ways to add web search capabilities to your project.
+You can connect this project to Claude Code or OpenCode as an MCP server. Claude Code users can also install the included subagent template.
 
-### Option 1: Use It As An MCP Server
+### Option 1: Use It As An MCP Server (Claude Code / OpenCode)
 
 This option is suitable when you want to use the search tools directly inside your own project.
 
@@ -35,29 +51,54 @@ This option is suitable when you want to use the search tools directly inside yo
    npm run build
    ```
 
-2. **Configure the MCP server**
+2. **Configure the MCP client**
 
-   Create or edit `.claude/settings.json` in your project:
+   **Claude Code**
 
-   ```json
-   {
-     "mcpServers": {
-       "local-web-search": {
-         "command": "node",
-         "args": ["/absolute/path/to/local-web-search-agent/build/index.js"]
-       }
-     }
-   }
-   ```
+Create or edit `.claude/settings.json` in your project:
+
+```json
+{
+  "mcpServers": {
+    "local-web-search": {
+      "command": "node",
+      "args": ["/absolute/path/to/local-web-search-agent/build/index.js"]
+    }
+  }
+}
+```
+
+**OpenCode**
+
+Create or edit `opencode.json` in the project root. To make the server available to all projects, use the global configuration file at `~/.config/opencode/opencode.json` instead:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "local-web-search": {
+      "type": "local",
+      "command": ["node", "/absolute/path/to/local-web-search-agent/build/index.js"],
+      "enabled": true
+    }
+  }
+}
+```
+
+Check the MCP server status after saving the configuration:
+
+```bash
+opencode mcp list
+```
 
 3. **Use the tools**
 
-   After configuration, you can directly call these tools in Claude Code:
+   After configuration, you can call these tools in Claude Code or OpenCode:
    - `web_search_bing`: run a web search
    - `read_webpage`: read and extract web page content
    - `get_current_time`: get current date and time information
 
-### Option 2: Use It As A Subagent (Recommended)
+### Option 2: Use It As A Claude Code Subagent (Recommended)
 
 This option makes web search available across projects and is usually more convenient.
 
@@ -295,10 +336,6 @@ npm run watch
 - Up to 10 searches
 - Up to 30 page reads
 - Avoids infinite search loops
-
-## Environment Variable
-
-- `CHROME_PATH`: Path to the Chrome for Testing executable (default: `D:/app/chrome-win64/chrome.exe`)
 
 ## Tech Stack
 

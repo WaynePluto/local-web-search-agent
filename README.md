@@ -2,27 +2,43 @@
 
 # Local Web Search Agent
 
-为 Claude Code 提供网络搜索能力的 MCP Server 和子代理模板。
+为 Claude Code 和 OpenCode 提供网络搜索能力的 MCP Server，并附带 Claude Code 子代理模板。
 
 ## 简介
 
-本项目通过 MCP (Model Context Protocol) 为 Claude Code 提供网络搜索能力。当 Claude Code 需要查询实时信息或获取网络内容时，可以通过本项目进行搜索并返回准确答案。
+本项目通过 MCP (Model Context Protocol) 为 Claude Code 和 OpenCode 提供网络搜索能力。当 AI 编程代理需要查询实时信息或获取网络内容时，可以通过本项目进行搜索并返回准确答案。
 
 ### 架构概览
 
 ```
-用户 → Claude Code 主代理 → local-web-search-agent 子代理 → MCP Server → Bing 搜索
-                                                                  ↓
-                                              Chrome for Testing (页面渲染)
+用户 → Claude Code（可选子代理）/ OpenCode → MCP Server → Bing 搜索
+                                                    ↓
+                                Chrome for Testing（页面渲染）
+```
+
+## 运行环境配置
+
+本项目通过 Chrome for Testing 执行搜索和网页渲染。默认可执行文件路径为 `D:/app/chrome-win64/chrome.exe`；如果 Chrome 安装在其他位置，请在运行 MCP Server 前设置 `CHROME_PATH`：
+
+```powershell
+# Windows PowerShell（写入当前用户环境变量）
+[Environment]::SetEnvironmentVariable("CHROME_PATH", "C:\path\to\chrome.exe", "User")
+```
+
+设置后请重新启动终端以及 Claude Code 或 OpenCode，使新环境变量生效。
+
+```bash
+# macOS / Linux
+export CHROME_PATH="/path/to/chrome"
 ```
 
 ---
 
-## 在其他项目中获得网络搜索能力
+## 在 Claude Code 或 OpenCode 中使用
 
-有两种方式可以让你的项目获得网络搜索能力：
+可以将本项目作为 MCP Server 接入 Claude Code 或 OpenCode；Claude Code 用户还可以使用配套的子代理模板。
 
-### 方式一：作为 MCP Server 使用
+### 方式一：作为 MCP Server 使用（Claude Code / OpenCode）
 
 这种方式适用于你想在自己的项目中直接使用搜索工具。
 
@@ -34,29 +50,54 @@
    npm run build
    ```
 
-2. **配置 MCP Server**
+2. **配置 MCP 客户端**
 
-   在你的项目目录下创建或编辑 `.claude/settings.json`：
+   **Claude Code**
 
-   ```json
-   {
-     "mcpServers": {
-       "local-web-search": {
-         "command": "node",
-         "args": ["/absolute/path/to/local-web-search-agent/build/index.js"]
-       }
-     }
-   }
-   ```
+在项目目录下创建或编辑 `.claude/settings.json`：
+
+```json
+{
+  "mcpServers": {
+    "local-web-search": {
+      "command": "node",
+      "args": ["/absolute/path/to/local-web-search-agent/build/index.js"]
+    }
+  }
+}
+```
+
+**OpenCode**
+
+在项目根目录创建或编辑 `opencode.json`。如需对所有项目生效，也可以使用全局配置文件 `~/.config/opencode/opencode.json`：
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "local-web-search": {
+      "type": "local",
+      "command": ["node", "/absolute/path/to/local-web-search-agent/build/index.js"],
+      "enabled": true
+    }
+  }
+}
+```
+
+配置后可以检查 MCP Server 状态：
+
+```bash
+opencode mcp list
+```
 
 3. **使用工具**
 
-   配置完成后，你可以在 Claude Code 中直接调用以下工具：
+   配置完成后，你可以在 Claude Code 或 OpenCode 中调用以下工具：
    - `web_search_bing`: 执行网络搜索
    - `read_webpage`: 读取网页内容
    - `get_current_time`: 获取当前时间信息
 
-### 方式二：作为子代理使用（推荐）
+### 方式二：作为 Claude Code 子代理使用（推荐）
 
 这种方式会让所有项目都能使用网络搜索能力，更方便。
 
@@ -294,10 +335,6 @@ npm run watch
 - 最多搜索 10 次
 - 最多阅读 30 个页面
 - 避免陷入死循环
-
-## 环境变量
-
-- `CHROME_PATH`: Chrome for Testing 可执行文件路径（默认：`D:/app/chrome-win64/chrome.exe`）
 
 ## 技术栈
 
